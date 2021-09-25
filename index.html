@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="./css/reset.css">
+    <link rel="stylesheet" href="./css/style.css">
+    <style>
+        #duration {
+            width: 100%;
+            background-color: rgb(179, 179, 179);
+
+            height: 15px;
+        }
+
+        #now_duration {
+            background-color: rgb(81, 218, 129);
+
+            height: 15px;
+        }
+    </style>
+</head>
+
+
+
+<body>
+
+
+    <video id="music" src="">
+        <track kind="subtitles" label="English" src="./lyrics/lost cause.vtt" default />
+    </video>
+    <div id="duration">
+        <div id="now_duration"></div>
+    </div>
+    <div id="nowTime">123</div>
+    <button id="play">播放</button>
+    <button id="stop">暫停</button>
+
+
+    <script src="./js/main.js"></script>
+    <script>
+        let music = document.getElementById("music")
+        music.src = "./music/Billie Eilish - Lost Cause (Official Music Video).mp3"
+
+        let playButton = document.getElementById("play")
+        let stopButton = document.getElementById("stop")
+        let durationBar = document.getElementById("now_duration")
+        let durationBarWrap = document.getElementById("duration")
+        let musicNowTime = document.getElementById("nowTime")
+
+        playButton.addEventListener("click", playMusic)
+        stopButton.addEventListener("click", stopMusic)
+        music.addEventListener("timeupdate", whenMusicPlaying) //音樂播放就會一直觸發
+        durationBarWrap.addEventListener("click", clickDurationBar)
+
+        function playMusic() { //播放音樂
+            music.play()
+        }
+
+        function stopMusic() { //暫停音樂
+            music.pause()
+        }
+
+        function whenMusicPlaying() { //音樂播放就會一直觸發
+            timeDurationBar()
+            currentTime()
+        }
+
+        function currentTime() { //顯示現在時間文字
+            let s = music.currentTime
+            musicNowTime.innerText = `${seceondToMinutes(s)[0]}:${seceondToMinutes(s)[1]}`
+        }
+
+        function seceondToMinutes(s) { //秒鐘換成分鐘
+            let minutes = "0" + Math.floor(s / 60)
+            let second = Math.floor(s % 60)
+            if (second < 10) {
+                second = "0" + Math.floor(s % 60)
+            } else {
+                second = Math.floor(s % 60)
+            }
+            return [minutes, second]
+
+        }
+
+        function timeDurationBar() { //bar伸縮
+            durationBar.style.width = (music.currentTime / music.duration) * 100 + "%"
+        }
+
+        function clickDurationBar(e) { //bar點擊後更改時間
+            let userClick = (e.offsetX / durationBarWrap.offsetWidth) //用戶點擊的bar的位置（尚未乘上100%）
+            durationBar.style.width = userClick * 100 + "%"
+            music.currentTime = userClick * music.duration
+        }
+    </script>
+</body>
+
+</html>
