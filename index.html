@@ -9,9 +9,15 @@
     <link rel="stylesheet" href="./css/reset.css">
     <link rel="stylesheet" href="./css/style.css">
     <style>
+        body {
+            padding: 15px;
+
+            padding-top: 20px;
+        }
+
         #duration {
             width: 100%;
-            background-color: rgb(179, 179, 179);
+            background-color: rgb(189, 186, 186);
 
             height: 15px;
         }
@@ -29,9 +35,9 @@
 <body>
 
 
-    <video id="music" src="">
+    <audio id="music" src="">
         <track kind="subtitles" label="English" src="./lyrics/lost cause.vtt" default />
-    </video>
+    </audio>
     <div id="duration">
         <div id="now_duration"></div>
     </div>
@@ -39,6 +45,9 @@
     <button id="play">播放</button>
     <button id="stop">暫停</button>
 
+
+    <ul id="lyric_wrap">
+    </ul>
 
     <script src="./js/main.js"></script>
     <script>
@@ -50,11 +59,12 @@
         let durationBar = document.getElementById("now_duration")
         let durationBarWrap = document.getElementById("duration")
         let musicNowTime = document.getElementById("nowTime")
+        let lyricWrap = document.getElementById("lyric_wrap")
 
-        playButton.addEventListener("click", playMusic)
-        stopButton.addEventListener("click", stopMusic)
+        playButton.addEventListener("click", playMusic) //點擊播放
+        stopButton.addEventListener("click", stopMusic) //點擊暫停
         music.addEventListener("timeupdate", whenMusicPlaying) //音樂播放就會一直觸發
-        durationBarWrap.addEventListener("click", clickDurationBar)
+        durationBarWrap.addEventListener("click", clickDurationBar) //點擊播放吧
 
         function playMusic() { //播放音樂
             music.play()
@@ -67,6 +77,7 @@
         function whenMusicPlaying() { //音樂播放就會一直觸發
             timeDurationBar()
             currentTime()
+            highlightLyric()
         }
 
         function currentTime() { //顯示現在時間文字
@@ -83,7 +94,6 @@
                 second = Math.floor(s % 60)
             }
             return [minutes, second]
-
         }
 
         function timeDurationBar() { //bar伸縮
@@ -94,6 +104,71 @@
             let userClick = (e.offsetX / durationBarWrap.offsetWidth) //用戶點擊的bar的位置（尚未乘上100%）
             durationBar.style.width = userClick * 100 + "%"
             music.currentTime = userClick * music.duration
+        }
+
+
+
+
+        let lyricsData
+        let lyrics = []
+        //取得歌詞
+        fetch('./lyrics/lost%20cause.vtt', {
+                method: 'get',
+            })
+            .then(function (response) {
+
+                return response.text()
+            }).then(function (result) {
+                lyricsData = result;
+                parseToLyrics()
+                createLyrics()
+            }).catch(function (err) {
+                console.log(err);
+            });
+
+        function parseToLyrics() {
+            let lyricsArray = lyricsData.split("\n\n")
+            let index = 0
+            lyrics = lyricsArray.map(function (item) {
+                let parts = item.split("\n");
+                let timeSplit = parts[0].split(" ")
+                return {
+                    index: index++,
+                    timeStart: vttTimeToSecond(timeSplit[0]),
+                    timeEnd: vttTimeToSecond(timeSplit[2]),
+                    text: parts[1],
+                };
+            });
+            console.log(lyrics);
+        }
+
+        function createLyrics() {
+            lyrics.forEach(element => {
+                lyricWrap.innerHTML += `<li id="lyrics${element["index"]}">${element["text"]}</li>`
+            });
+        }
+
+        function vttTimeToSecond(time) { //將vtt時間轉換為秒鐘
+            let second = time.slice(6, 8)
+            let minutes = time.slice(3, 5)
+            return minutes * 60 + second * 1
+        }
+
+        function highlightLyric() {
+            //抓到現在是哪句歌詞
+            let s = music.currentTime
+            let nowLyrics
+            nowLyrics = lyrics.filter(function (element) {
+                return element["timeStart"] < s && element["timeEnd"] > s
+            })
+            //highlight前端頁面當前歌詞div
+            if (nowLyrics[0]) {
+                let allLyric = document.querySelectorAll("ul li")
+                for (let i = 0; i < allLyric.length; i++) {
+                    allLyric[i].style.background = "none"
+                }
+                document.querySelector("#lyrics" + nowLyrics[0]['index']).style.background = "rgb(169, 168, 168)"
+            }
         }
     </script>
 </body>
