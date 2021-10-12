@@ -33,7 +33,7 @@
       }
       .player_left_photo {
         max-width: 60px;
-        margin-right: 5px;
+        margin-right: 10px;
       }
       .player_left_photo img {
         height: 100%;
@@ -175,7 +175,6 @@
         //bar伸縮
         if (!music.duration) {
           durationBar.style.width = "0%";
-          console.log(123);
           return;
         }
         durationBar.style.width = (music.currentTime / music.duration) * 100 + "%";
