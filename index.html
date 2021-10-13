@@ -11,7 +11,8 @@
     <link rel="stylesheet" href="./css/style.css" />
     <style>
       /* player */
-      #player {
+
+      #leo_player {
         position: fixed;
         width: 100%;
         bottom: 0;
@@ -21,8 +22,14 @@
         align-items: center;
         background-color: #262626;
       }
+      #leo_player button {
+        background: none;
+        border: none;
+        cursor: pointer;
+      }
 
       .player_left {
+        width: 30%;
         display: flex;
       }
       .player_left_text {
@@ -30,6 +37,9 @@
         display: flex;
         flex-direction: column;
         justify-content: center;
+      }
+      .player_left_text p {
+        color: white;
       }
       .player_left_photo {
         max-width: 60px;
@@ -39,8 +49,18 @@
         height: 100%;
         object-fit: cover;
       }
+      .player_mid {
+        width: 40%;
+        display: flex;
+        justify-content: center;
+      }
       .player_mid ul {
         display: flex;
+      }
+      .player_right {
+        width: 30%;
+        display: flex;
+        justify-content: flex-end;
       }
       .player_right ul {
         display: flex;
@@ -52,14 +72,15 @@
         left: 0;
         height: 5px;
         width: 100%;
-        background-color: #262626 (189, 186, 186);
+        background-color: rgb(104, 104, 104);
       }
 
       #now_duration {
-        background-color: rgb(81, 218, 129);
+        background-color: #24ac64;
         height: 5px;
       }
       .songtime {
+        padding: 0 3px;
         font-size: 14px;
         position: absolute;
         width: 100%;
@@ -68,6 +89,51 @@
         display: flex;
         justify-content: space-between;
       }
+
+      /* playpage */
+      .leo_container {
+        max-width: 1140px;
+        margin: auto;
+        position: relative;
+      }
+      .playpage_main {
+        display: flex;
+        max-height: calc(100vh - 146px);
+      }
+      .playpage_main section {
+        position: relative;
+        width: 50%;
+      }
+      .playpage_left {
+        position: relative;
+      }
+      .playpage_right {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .playpage_right .lyric_wrap {
+        max-height: 70%;
+        overflow: hidden;
+      }
+      .playpage_right .lyric_wrap #lyric li {
+        text-align: center;
+      }
+      .playpage_wave {
+        position: absolute;
+        width: 100%;
+        bottom: 60px;
+      }
+
+      .music_flow {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        z-index: -99;
+      }
+
       /* 不用 */
       nav {
         height: 70px;
@@ -79,8 +145,60 @@
 
   <body>
     <nav>不是我做的nav</nav>
-
-    <div id="player">
+    <div class="leo_container">
+      <div class="playpage_main">
+        <section class="playpage_main playpage_left">
+          <main>
+            <div class="player">
+              <div class="record">
+                <div class="label"></div>
+                <div class="spindle"></div>
+              </div>
+              <div class="arm-container">
+                <div class="knob weight bottom"></div>
+                <div class="arm"></div>
+                <div class="knob weight top">
+                  <button class="play"></button>
+                </div>
+              </div>
+              <div class="speaker">
+                <div class="hole"></div>
+                <div class="hole"></div>
+                <div class="hole"></div>
+                <div class="hole"></div>
+                <div class="hole"></div>
+                <div class="hole"></div>
+                <div class="hole"></div>
+                <div class="hole"></div>
+              </div>
+              <div class="knob volume bottom">
+                <div class="down"></div>
+                <div class="up"></div>
+              </div>
+              <div class="knob volume top"></div>
+            </div>
+          </main>
+          <div class="music_flow"><canvas id="output" height="650" width="650"></canvas></div>
+        </section>
+        <section class="playpage_main playpage_right">
+          <div class="lyric_wrap"><ul id="lyric"></ul></div>
+        </section>
+      </div>
+    </div>
+    <div class="playpage_wave">
+      <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+        <defs>
+          <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+        </defs>
+        <g class="parallax">
+          <use xlink:href="#gentle-wave" x="48" y="0" fill="rgba(217, 220, 223,0.7)" />
+          <use xlink:href="#gentle-wave" x="48" y="3" fill="rgba(217, 220, 223,0.5)" />
+          <use xlink:href="#gentle-wave" x="48" y="5" fill="rgba(217, 220, 223,0.3)" />
+          <use xlink:href="#gentle-wave" x="48" y="7" fill="rgb(217, 220, 223)" />
+        </g>
+      </svg>
+    </div>
+    <div id="leo_player">
       <div class="songtime">
         <div id="nowTime"></div>
         <div id="allTime">3:31</div>
@@ -98,26 +216,50 @@
       </div>
       <div class="player_mid">
         <ul>
-          <!-- <li><button>隨機</button></li>
-          <li><button>上一首</button></li> -->
-          <li><button id="play">播放</button></li>
-          <li><button id="stop">暫停</button></li>
-          <!-- <li><button>下一首</button></li>
-          <li><button>重複</button></li> -->
+          <li>
+            <button><img src="./image/playericon/shuffle.svg" alt="" /></button>
+          </li>
+          <li>
+            <button><img src="./image/playericon/next track-1.svg" alt="" /></button>
+          </li>
+          <li>
+            <button id="play"><img src="./image/playericon/play.svg" alt="" /></button>
+          </li>
+          <li>
+            <button id="stop"><img src="./image/playericon/pause.svg" alt="" /></button>
+          </li>
+          <li>
+            <button><img src="./image/playericon/next track.svg" alt="" /></button>
+          </li>
+
+          <li>
+            <button><img src="./image/playericon/cycle arrows.svg" alt="" /></button>
+          </li>
         </ul>
       </div>
       <div class="player_right">
         <ul>
-          <li><button>音量</button></li>
-          <li><button>播放列表</button></li>
+          <li>
+            <button><img src="./image/playericon/sound.svg" alt="" /></button>
+          </li>
+          <li>
+            <button><img src="./image/playericon/Playlist.svg" alt="" /></button>
+          </li>
         </ul>
       </div>
     </div>
+
     <audio id="music" src="">
       <track kind="subtitles" label="English" src="./lyrics/lost cause.vtt" default />
     </audio>
 
-    <ul id="lyric_wrap"></ul>
+    <!-- 音樂聲波 -->
+    <script src="https://cdn.jsdelivr.net/gh/foobar404/wave.js/dist/bundle.iife.js"></script>
+
+    <script>
+      let wave = new Wave();
+      wave.fromElement("music", "output", { type: "flower", colors: ["#E88239"] });
+    </script>
 
     <script src="./js/main.js"></script>
     <script>
@@ -129,7 +271,7 @@
       let durationBar = document.getElementById("now_duration");
       let durationBarWrap = document.getElementById("duration");
       let musicNowTime = document.getElementById("nowTime");
-      let lyricWrap = document.getElementById("lyric_wrap");
+      let lyricWrap = document.getElementById("lyric");
 
       playButton.addEventListener("click", playMusic); //點擊播放
       stopButton.addEventListener("click", stopMusic); //點擊暫停
@@ -139,11 +281,13 @@
       function playMusic() {
         //播放音樂
         music.play();
+        recordRotate();
       }
 
       function stopMusic() {
         //暫停音樂
         music.pause();
+        recordRotateStop();
       }
 
       function whenMusicPlaying() {
@@ -151,6 +295,14 @@
         timeDurationBar();
         currentTime();
         highlightLyric();
+      }
+      function recordRotate() {
+        //唱片轉動
+        document.querySelector(".record").classList.add("recordRotate");
+      }
+      function recordRotateStop() {
+        //唱片停止轉動
+        document.querySelector(".record").classList.remove("recordRotate");
       }
 
       function currentTime() {
