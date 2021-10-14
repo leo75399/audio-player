@@ -9,6 +9,12 @@
     <title>播放頁</title>
     <link rel="stylesheet" href="./css/reset.css" />
     <link rel="stylesheet" href="./css/style.css" />
+    <!-- //google font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap" rel="stylesheet" />
+
+    <!-- @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap'); -->
     <style>
       /* player */
 
@@ -98,7 +104,6 @@
       }
       .playpage_main {
         display: flex;
-        max-height: calc(100vh - 146px);
       }
       .playpage_main section {
         position: relative;
@@ -125,13 +130,34 @@
         width: 100%;
         bottom: 60px;
       }
-
+      /* 左側聲波 */
       .music_flow {
         position: absolute;
         left: 50%;
         top: 50%;
         transform: translate(-50%, -50%);
         z-index: -99;
+      }
+      /* 歌詞 */
+      .lyric_wrap {
+        padding: 50% 0;
+      }
+      #lyric {
+        font-size: 20px;
+        font-family: "Roboto", sans-serif;
+        font-weight: 100;
+        color: #938686;
+        transition: transform 0.1s linear;
+      }
+      #lyric li {
+        transition: font-size 0.1s linear;
+        line-height: 30px;
+        padding: 10px 0;
+      }
+      #lyric .highlight {
+        font-size: 30px;
+        font-weight: 500;
+        color: black;
       }
 
       /* 不用 */
@@ -140,6 +166,9 @@
         background-color: black;
         color: white;
       }
+      /* * {
+        border: black 1px solid !important;
+      } */
     </style>
   </head>
 
@@ -181,7 +210,9 @@
           <div class="music_flow"><canvas id="output" height="650" width="650"></canvas></div>
         </section>
         <section class="playpage_main playpage_right">
-          <div class="lyric_wrap"><ul id="lyric"></ul></div>
+          <div class="lyric_wrap">
+            <ul id="lyric"></ul>
+          </div>
         </section>
       </div>
     </div>
@@ -256,11 +287,6 @@
     <!-- 音樂聲波 -->
     <script src="https://cdn.jsdelivr.net/gh/foobar404/wave.js/dist/bundle.iife.js"></script>
 
-    <script>
-      let wave = new Wave();
-      wave.fromElement("music", "output", { type: "flower", colors: ["#E88239"] });
-    </script>
-
     <script src="./js/main.js"></script>
     <script>
       let music = document.getElementById("music");
@@ -322,7 +348,6 @@
         }
         return [minutes, second];
       }
-
       function timeDurationBar() {
         //bar伸縮
         if (!music.duration) {
@@ -350,8 +375,9 @@
         })
         .then(function (result) {
           lyricsData = result;
-          parseToLyrics();
-          createLyrics();
+          parseToLyrics(); //轉換歌詞成物件
+          createLyrics(); //生成歌詞
+          setFirstLyricAnimate(); //設定歌詞的初始動態樣式
         })
         .catch(function (err) {
           console.log(err);
@@ -393,15 +419,46 @@
         nowLyrics = lyrics.filter(function (element) {
           return element["timeStart"] < s && element["timeEnd"] > s;
         });
+        console.log(nowLyrics);
         //highlight前端頁面當前歌詞div
         if (nowLyrics[0]) {
           let allLyric = document.querySelectorAll("ul li");
           for (let i = 0; i < allLyric.length; i++) {
-            allLyric[i].style.background = "none";
+            allLyric[i].classList.remove("highlight");
           }
-          document.querySelector("#lyrics" + nowLyrics[0]["index"]).style.background = "rgb(169, 168, 168)";
+          document.querySelector("#lyrics" + nowLyrics[0]["index"]).classList.add("highlight");
+          setLyricAnimate(nowLyrics[0].index);
         }
       }
+      window.addEventListener("load", whenPageLoad); //載入時執行
+      window.addEventListener("resize", setPlaypageMainHeight); //視窗變化時執行
+      function whenPageLoad() {
+        //載入時執行
+        setPlaypageMainHeight(); //設定中間內容的高度
+      }
+      function setPlaypageMainHeight() {
+        //設定中間內容的高度
+        //網頁視窗高度-nav-播放器
+        let height = window.innerHeight - document.querySelector("nav").offsetHeight - document.querySelector("#leo_player").offsetHeight;
+        document.querySelector(".playpage_main").style.height = height + "px";
+      }
+
+      function setFirstLyricAnimate() {
+        //設定歌詞的初始動態樣式
+        document.getElementById("lyrics0").classList.add("highlight");
+        let highlighHigh = document.querySelector("#lyric .highlight").offsetHeight;
+        document.querySelector("#lyric").setAttribute("style", `transform:translateY(-${highlighHigh / 2}px)`);
+      }
+
+      function setLyricAnimate(nowLyric) {
+        let highlighHigh = document.querySelector("#lyric .highlight").offsetHeight;
+        let lyricHeight = document.querySelector("#lyric li").offsetHeight;
+        document.querySelector("#lyric").setAttribute("style", `transform:translateY(-${highlighHigh / 2 + nowLyric * lyricHeight}px)`);
+      }
+    </script>
+    <script>
+      let wave = new Wave();
+      wave.fromElement("music", "output", { type: "flower", colors: ["#E88239"] });
     </script>
   </body>
 </html>
