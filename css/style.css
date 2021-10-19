@@ -392,8 +392,11 @@ footer a {
 }
 .recordRotate {
   animation: spin 4s linear infinite;
+  animation-play-state: running;
 }
-
+.stopRecordRotate {
+  animation-play-state: paused;
+}
 @keyframes spin {
   100% {
     -webkit-transform: rotate(360deg);
@@ -497,7 +500,7 @@ p {
   }
 }
 /*Shrinking for mobile*/
-@media (max-width: 768px) {
+/* @media (max-width: 768px) {
   .waves {
     height: 40px;
     min-height: 40px;
@@ -508,4 +511,4 @@ p {
   h1 {
     font-size: 24px;
   }
-}
+} */

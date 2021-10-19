@@ -17,7 +17,9 @@
     <!-- @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap'); -->
     <style>
       /* player */
-
+      .leo_player_mobile {
+        display: none;
+      }
       #leo_player {
         position: fixed;
         width: 100%;
@@ -33,45 +35,54 @@
         border: none;
         cursor: pointer;
       }
-
-      .player_left {
+      .leo_player_left {
         width: 30%;
         display: flex;
       }
-      .player_left_text {
+      .leo_player_left_text {
         color: white;
         display: flex;
         flex-direction: column;
         justify-content: center;
       }
-      .player_left_text p {
-        color: white;
+      .leo_player_left_text h3 {
+        font-size: 18px;
+        font-weight: 400;
+        line-height: 28px;
       }
-      .player_left_photo {
+      .leo_player_left_text p {
+        font-weight: 200;
+        color: rgb(145, 144, 144);
+        font-size: 14px;
+      }
+      .leo_player_left_photo {
+        border-radius: 20%;
+        overflow: hidden;
         max-width: 60px;
         margin-right: 10px;
       }
-      .player_left_photo img {
+      .leo_player_left_photo img {
         height: 100%;
         object-fit: cover;
       }
-      .player_mid {
+
+      .leo_player_mid {
         width: 40%;
         display: flex;
         justify-content: center;
       }
-      .player_mid ul {
+      .leo_player_mid ul {
         display: flex;
       }
-      .player_right {
+      .leo_player_right {
         width: 30%;
         display: flex;
         justify-content: flex-end;
       }
-      .player_right ul {
+      .leo_player_right ul {
         display: flex;
       }
-      #duration {
+      #leo_duration {
         cursor: pointer;
         bottom: 100%;
         position: absolute;
@@ -81,11 +92,11 @@
         background-color: rgb(104, 104, 104);
       }
 
-      #now_duration {
+      #leo_now_duration {
         background-color: #24ac64;
         height: 5px;
       }
-      .songtime {
+      .leo_songtime {
         padding: 0 3px;
         font-size: 14px;
         position: absolute;
@@ -102,62 +113,278 @@
         margin: auto;
         position: relative;
       }
-      .playpage_main {
+      .leo_playpage_main {
         display: flex;
       }
-      .playpage_main section {
+      .leo_playpage_main section {
         position: relative;
         width: 50%;
       }
-      .playpage_left {
+      .leo_playpage_left {
         position: relative;
       }
-      .playpage_right {
+      .leo_playpage_right {
         display: flex;
         align-items: center;
         justify-content: center;
       }
 
-      .playpage_right .lyric_wrap {
+      .leo_playpage_right .leo_lyric_wrap {
         max-height: 70%;
         overflow: hidden;
       }
-      .playpage_right .lyric_wrap #lyric li {
+      .leo_playpage_right .leo_lyric_wrap #leo_lyric li {
         text-align: center;
       }
-      .playpage_wave {
+      .leo_playpage_wave {
         position: absolute;
         width: 100%;
         bottom: 60px;
+        z-index: -99;
       }
       /* 左側聲波 */
-      .music_flow {
+      .leo_music_flow {
         position: absolute;
         left: 50%;
         top: 50%;
         transform: translate(-50%, -50%);
         z-index: -99;
+        opacity: 0;
+        transition: opacity 1s ease-out;
       }
       /* 歌詞 */
-      .lyric_wrap {
+      .leo_lyric_wrap {
         padding: 50% 0;
       }
-      #lyric {
+      #leo_lyric {
         font-size: 20px;
         font-family: "Roboto", sans-serif;
         font-weight: 100;
         color: #938686;
         transition: transform 0.1s linear;
       }
-      #lyric li {
+
+      #leo_lyric li {
         transition: font-size 0.1s linear;
         line-height: 30px;
         padding: 10px 0;
       }
-      #lyric .highlight {
+      #leo_lyric .leo_highlight {
         font-size: 30px;
         font-weight: 500;
         color: black;
+      }
+      /* musiclist */
+      .leo_playpage_musiclist {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        position: absolute;
+        top: 0;
+        left: 0;
+        background-color: rgba(0, 0, 0, 0.633);
+        z-index: 99;
+
+        /* TODO: */
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease-in 0.3s;
+      }
+      .leo_playpage_musiclist_wrap {
+        width: fit-content;
+        position: absolute;
+        right: 0;
+        background-color: rgb(30, 28, 28);
+        padding: 15px 30px;
+        color: white;
+        box-shadow: 0px 25px 60px 0px rgba(40, 40, 40, 0.571);
+
+        /* TODO: */
+        transform: translateX(100%);
+        transition: transform 0.5s ease-in;
+      }
+      .leo_playpage_musiclist_wrap ul {
+        height: calc(100vh - 70px);
+        overflow-y: auto;
+      }
+      .leo_playpage_musiclist_wrap ul::-webkit-scrollbar {
+        display: none;
+      }
+      .leo_playpage_musiclist_wrap ul li {
+        padding: 7px 0;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+      }
+
+      .leo_playpage_musiclist_wrap .leo_musiclist_li_left {
+        max-width: 45px;
+        border-radius: 20%;
+        overflow: hidden;
+      }
+      .leo_playpage_musiclist_wrap .leo_musiclist_li_left img {
+        object-fit: cover;
+        display: block;
+      }
+
+      .leo_playpage_musiclist_wrap h2 {
+        font-size: 30px;
+        margin-bottom: 10px;
+      }
+
+      .leo_musiclist_li_mid {
+        width: 125px;
+        line-height: 25px;
+        margin-left: 15px;
+        padding-right: 15px;
+
+        position: relative;
+      }
+      .leo_musiclist_li_mid h3 {
+        font-size: 18px;
+        font-weight: 400;
+      }
+      .leo_musiclist_li_mid p {
+        font-size: 14px;
+        color: rgb(174, 174, 174);
+        font-weight: 400;
+      }
+      .leo_musiclist_li_mid::after {
+        content: "";
+        position: absolute;
+        bottom: -7px;
+        background-color: rgb(87, 87, 87);
+        width: 100%;
+        height: 1px;
+      }
+      .leo_musiclist_li_right {
+        color: rgb(174, 174, 174);
+        position: relative;
+        display: flex;
+        align-items: center;
+        align-self: stretch;
+      }
+      .leo_musiclist_li_right::after {
+        content: "";
+        position: absolute;
+        bottom: -7px;
+        background-color: rgb(87, 87, 87);
+        width: 100%;
+        left: 0;
+        height: 1px;
+      }
+
+      @media screen and (max-width: 1000px) {
+        main {
+          max-width: 400px;
+        }
+        .leo_music_flow canvas {
+          width: 450px;
+          height: 450px;
+        }
+        #leo_lyric {
+          font-size: 18px;
+        }
+        #leo_lyric .leo_highlight {
+          font-size: 22px;
+        }
+        #leo_lyric li {
+          line-height: 24px;
+        }
+      }
+      @media screen and (max-width: 660px) {
+        .leo_playpage_main {
+          display: block;
+        }
+        .leo_playpage_main section:nth-child(1) {
+          width: 100%;
+          height: 50%;
+        }
+        .leo_playpage_main section:nth-child(2) {
+          width: 100%;
+          height: 50%;
+        }
+        .leo_playpage_right .leo_lyric_wrap {
+          max-height: initial;
+          height: 70%;
+          padding: 0px;
+          padding-top: 5%;
+        }
+        .leo_player_left {
+          display: none;
+        }
+        .leo_player_right {
+          display: none;
+        }
+
+        .leo_player_mid {
+          width: 100%;
+        }
+        .leo_player_mid ul {
+          display: flex;
+          width: 100%;
+          justify-content: space-around;
+        }
+        .leo_leo_player_mobile {
+          display: block;
+        }
+
+        .leo_playpage_wave {
+          bottom: 40px;
+        }
+        #leo_player {
+          padding: 0;
+          height: 60px;
+          justify-content: center;
+        }
+        .leo_player_mobile {
+          position: absolute;
+          bottom: 100%;
+          display: flex;
+          justify-content: space-between;
+          background-color: rgba(133, 133, 133, 0.599);
+          width: 100%;
+          padding: 10px 12px;
+        }
+        .leo_player_mobile .leo_player_photo {
+          border-radius: 20%;
+          overflow: hidden;
+          max-width: 60px;
+          margin-right: 10px;
+        }
+        .leo_player_mobile .leo_player_mobile_left {
+          display: flex;
+        }
+        .leo_player_left_text h3 {
+          color: black;
+          font-weight: 600;
+        }
+        .leo_player_left_text p {
+          font-weight: 400;
+          color: rgb(0, 0, 0);
+        }
+        .leo_player_mobile_right {
+          display: flex;
+          align-items: center;
+        }
+      }
+      @media screen and (max-width: 500px) {
+        .leo_music_flow canvas {
+          width: 370px;
+          height: 370px;
+        }
+        .leo_playpage_wave {
+          bottom: 27px;
+        }
+      }
+      @media screen and (max-width: 370px) {
+        .leo_music_flow canvas {
+          width: 320px;
+          height: 320px;
+        }
+        .leo_playpage_wave {
+          bottom: 0px;
+        }
       }
 
       /* 不用 */
@@ -166,20 +393,37 @@
         background-color: black;
         color: white;
       }
-      /* * {
-        border: black 1px solid !important;
-      } */
+
+      * {
+        /* border: black 1px solid !important; */
+      }
     </style>
   </head>
 
   <body>
     <nav>不是我做的nav</nav>
+    <div class="leo_playpage_musiclist">
+      <div class="leo_playpage_musiclist_wrap">
+        <h2>待播清單</h2>
+        <ul>
+          <li>
+            <div class="leo_musiclist_li_left"><img src="./image/62d669741d787b91e6fc027ec9842a2d.jpeg" alt="" /></div>
+            <div class="leo_musiclist_li_mid">
+              <h3>Lost cause</h3>
+              <p>Billie Eilish</p>
+            </div>
+            <div class="leo_musiclist_li_right">5:01</div>
+          </li>
+        </ul>
+      </div>
+    </div>
+
     <div class="leo_container">
-      <div class="playpage_main">
-        <section class="playpage_main playpage_left">
+      <div class="leo_playpage_main">
+        <section class="leo_playpage_main playpage_left">
           <main>
             <div class="player">
-              <div class="record">
+              <div class="record recordRotate stopRecordRotate">
                 <div class="label"></div>
                 <div class="spindle"></div>
               </div>
@@ -207,16 +451,18 @@
               <div class="knob volume top"></div>
             </div>
           </main>
-          <div class="music_flow"><canvas id="output" height="650" width="650"></canvas></div>
+          <div class="leo_music_flow">
+            <canvas id="output" height="650" width="650"></canvas>
+          </div>
         </section>
-        <section class="playpage_main playpage_right">
-          <div class="lyric_wrap">
-            <ul id="lyric"></ul>
+        <section class="leo_playpage_main leo_playpage_right">
+          <div class="leo_lyric_wrap">
+            <ul id="leo_lyric"></ul>
           </div>
         </section>
       </div>
     </div>
-    <div class="playpage_wave">
+    <div class="leo_playpage_wave">
       <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
         <defs>
           <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
@@ -230,22 +476,22 @@
       </svg>
     </div>
     <div id="leo_player">
-      <div class="songtime">
-        <div id="nowTime"></div>
-        <div id="allTime">3:31</div>
+      <div class="leo_songtime">
+        <div id="leo_nowTime"></div>
+        <div id="leo_allTime">3:31</div>
       </div>
-      <div id="duration">
-        <div id="now_duration"></div>
+      <div id="leo_duration">
+        <div id="leo_now_duration"></div>
       </div>
       <!-- <div class="duration_bar"><input type="range" /></div> -->
-      <div class="player_left">
-        <div class="player_left_photo"><img src="./image/62d669741d787b91e6fc027ec9842a2d.jpeg" alt="" /></div>
-        <div class="player_left_text">
+      <div class="leo_player_left">
+        <div class="leo_player_left_photo"><img src="./image/62d669741d787b91e6fc027ec9842a2d.jpeg" alt="" /></div>
+        <div class="leo_player_left_text">
           <h3>Lost cause</h3>
           <p>Billie Eilish</p>
         </div>
       </div>
-      <div class="player_mid">
+      <div class="leo_player_mid">
         <ul>
           <li>
             <button><img src="./image/playericon/shuffle.svg" alt="" /></button>
@@ -254,10 +500,10 @@
             <button><img src="./image/playericon/next track-1.svg" alt="" /></button>
           </li>
           <li>
-            <button id="play"><img src="./image/playericon/play.svg" alt="" /></button>
+            <button id="leo_play"><img src="./image/playericon/play.svg" alt="" /></button>
           </li>
           <li>
-            <button id="stop"><img src="./image/playericon/pause.svg" alt="" /></button>
+            <button id="leo_stop"><img src="./image/playericon/pause.svg" alt="" /></button>
           </li>
           <li>
             <button><img src="./image/playericon/next track.svg" alt="" /></button>
@@ -268,19 +514,31 @@
           </li>
         </ul>
       </div>
-      <div class="player_right">
+      <div class="leo_player_right">
         <ul>
           <li>
             <button><img src="./image/playericon/sound.svg" alt="" /></button>
           </li>
           <li>
-            <button><img src="./image/playericon/Playlist.svg" alt="" /></button>
+            <button id="leo_playlist_button"><img src="./image/playericon/Playlist.svg" alt="" /></button>
           </li>
         </ul>
       </div>
+      <div class="leo_player_mobile">
+        <div class="leo_player_mobile_left">
+          <div class="leo_player_photo"><img src="./image/62d669741d787b91e6fc027ec9842a2d.jpeg" alt="" /></div>
+          <div class="leo_player_left_text">
+            <h3>Lost cause</h3>
+            <p>Billie Eilish</p>
+          </div>
+        </div>
+        <div class="leo_player_mobile_right">
+          <button id="leo_playlist_button"><img src="./image/playericon/Playlist.svg" alt="" /></button>
+        </div>
+      </div>
     </div>
 
-    <audio id="music" src="">
+    <audio id="leo_music" src="">
       <track kind="subtitles" label="English" src="./lyrics/lost cause.vtt" default />
     </audio>
 
@@ -288,32 +546,45 @@
     <script src="https://cdn.jsdelivr.net/gh/foobar404/wave.js/dist/bundle.iife.js"></script>
 
     <script src="./js/main.js"></script>
+
     <script>
-      let music = document.getElementById("music");
+      let music = document.getElementById("leo_music");
       music.src = "./music/Billie Eilish - Lost Cause (Official Music Video).mp3";
 
-      let playButton = document.getElementById("play");
-      let stopButton = document.getElementById("stop");
-      let durationBar = document.getElementById("now_duration");
-      let durationBarWrap = document.getElementById("duration");
-      let musicNowTime = document.getElementById("nowTime");
-      let lyricWrap = document.getElementById("lyric");
+      let playButton = document.getElementById("leo_play");
+      let stopButton = document.getElementById("leo_stop");
+      let durationBar = document.getElementById("leo_now_duration");
+      let durationBarWrap = document.getElementById("leo_duration");
+      let musicNowTime = document.getElementById("leo_nowTime");
+      let lyricWrap = document.getElementById("leo_lyric");
+      let palylistButton = document.getElementById("leo_playlist_button");
 
-      playButton.addEventListener("click", playMusic); //點擊播放
-      stopButton.addEventListener("click", stopMusic); //點擊暫停
+      playButton.addEventListener("click", playMusic); //TODO:點擊播放
+      stopButton.addEventListener("click", stopMusic); //TODO:點擊暫停
       music.addEventListener("timeupdate", whenMusicPlaying); //音樂播放就會一直觸發
       durationBarWrap.addEventListener("click", clickDurationBar); //點擊播放吧
+      stopButton.addEventListener("click", stopMusic); //點擊播放列表按鍵
+      palylistButton.addEventListener("click", openPlaylist); //點擊播放列表按鍵
+
+      function openPlaylist() {
+        //開啟待播清單
+        document.querySelector(".leo_playpage_musiclist").style.visibility = "visible";
+        document.querySelector(".leo_playpage_musiclist").style.opacity = "1";
+        document.querySelector(".leo_playpage_musiclist_wrap").style.transform = "translateX(0%)";
+      }
 
       function playMusic() {
         //播放音樂
         music.play();
         recordRotate();
+        musicFlowShow();
       }
 
       function stopMusic() {
         //暫停音樂
         music.pause();
         recordRotateStop();
+        musicFlowHide();
       }
 
       function whenMusicPlaying() {
@@ -324,13 +595,20 @@
       }
       function recordRotate() {
         //唱片轉動
-        document.querySelector(".record").classList.add("recordRotate");
+        document.querySelector(".record").classList.remove("stopRecordRotate");
       }
       function recordRotateStop() {
         //唱片停止轉動
-        document.querySelector(".record").classList.remove("recordRotate");
+        document.querySelector(".record").classList.add("stopRecordRotate");
       }
-
+      function musicFlowShow() {
+        //左邊的音樂動畫顯示
+        document.querySelector(".leo_music_flow").style.opacity = "1";
+      }
+      function musicFlowHide() {
+        //左邊的音樂動畫消失
+        document.querySelector(".leo_music_flow").style.opacity = "0";
+      }
       function currentTime() {
         //顯示現在時間文字
         let s = music.currentTime;
@@ -384,6 +662,7 @@
         });
 
       function parseToLyrics() {
+        //轉換歌詞成物件
         let lyricsArray = lyricsData.split("\n\n");
         let index = 0;
         lyrics = lyricsArray.map(function (item) {
@@ -415,50 +694,52 @@
       function highlightLyric() {
         //抓到現在是哪句歌詞
         let s = music.currentTime;
+        console.log(s);
         let nowLyrics;
         nowLyrics = lyrics.filter(function (element) {
           return element["timeStart"] < s && element["timeEnd"] > s;
         });
-        console.log(nowLyrics);
         //highlight前端頁面當前歌詞div
         if (nowLyrics[0]) {
           let allLyric = document.querySelectorAll("ul li");
           for (let i = 0; i < allLyric.length; i++) {
-            allLyric[i].classList.remove("highlight");
+            allLyric[i].classList.remove("leo_highlight");
           }
-          document.querySelector("#lyrics" + nowLyrics[0]["index"]).classList.add("highlight");
+          document.querySelector("#lyrics" + nowLyrics[0]["index"]).classList.add("leo_highlight");
           setLyricAnimate(nowLyrics[0].index);
         }
       }
-      window.addEventListener("load", whenPageLoad); //載入時執行
-      window.addEventListener("resize", setPlaypageMainHeight); //視窗變化時執行
+      window.addEventListener("load", whenPageLoad); // TODO:載入時執行
+      window.addEventListener("resize", setPlaypageMainHeight); //TODO:視窗變化時執行
+
       function whenPageLoad() {
         //載入時執行
         setPlaypageMainHeight(); //設定中間內容的高度
       }
       function setPlaypageMainHeight() {
-        //設定中間內容的高度
+        //TODO:設定中間內容的高度
         //網頁視窗高度-nav-播放器
         let height = window.innerHeight - document.querySelector("nav").offsetHeight - document.querySelector("#leo_player").offsetHeight;
-        document.querySelector(".playpage_main").style.height = height + "px";
+        document.querySelector(".leo_playpage_main").style.height = height + "px";
       }
 
       function setFirstLyricAnimate() {
         //設定歌詞的初始動態樣式
-        document.getElementById("lyrics0").classList.add("highlight");
-        let highlighHigh = document.querySelector("#lyric .highlight").offsetHeight;
-        document.querySelector("#lyric").setAttribute("style", `transform:translateY(-${highlighHigh / 2}px)`);
+        document.getElementById("lyrics0").classList.add("leo_highlight");
+        let highlighHigh = document.querySelector("#leo_lyric .leo_highlight").offsetHeight;
+        document.querySelector("#leo_lyric").setAttribute("style", `transform:translateY(-${highlighHigh / 2}px)`);
       }
 
       function setLyricAnimate(nowLyric) {
-        let highlighHigh = document.querySelector("#lyric .highlight").offsetHeight;
-        let lyricHeight = document.querySelector("#lyric li").offsetHeight;
-        document.querySelector("#lyric").setAttribute("style", `transform:translateY(-${highlighHigh / 2 + nowLyric * lyricHeight}px)`);
+        let highlighHigh = document.querySelector("#leo_lyric .leo_highlight").offsetHeight;
+        let lyricHeight = document.querySelector("#leo_lyric li").offsetHeight;
+        document.querySelector("#leo_lyric").setAttribute("style", `transform:translateY(-${highlighHigh / 2 + nowLyric * lyricHeight}px)`);
+        console.log("setLyricAnimate");
       }
     </script>
     <script>
       let wave = new Wave();
-      wave.fromElement("music", "output", { type: "flower", colors: ["#E88239"] });
+      wave.fromElement("leo_music", "output", { type: "flower", colors: ["#E88239"] });
     </script>
   </body>
 </html>
